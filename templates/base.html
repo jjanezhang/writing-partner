@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Poetry Pair Writer</title>
+    <title>A Poem Written by You and GPT-2</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"
         integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
@@ -33,6 +33,12 @@
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
+            border: none;
+        }
+        
+        .txt-box {
+            width: 90%;
+            height: 200px
         }
 
         .logo {
@@ -50,12 +56,13 @@
         .column {
             float: left;
             width: 50%;
+            height: 100%;
         }
 
         .results {
             background-color: beige;
             height: 100%;
-            padding: 20px 0px;
+            padding: 20px 10px;
         }
 
         .result-header {
@@ -93,39 +100,24 @@
         <p class="message">{{message}}</p>
         {% endif %}
         <div class="questions column">
-            <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
-                <h2>Upload Documents</h2>
-                <p>Upload any text or pdf file you would like to search through</p>
-                <input type="file" name="file">
+            <form action="{{ url_for('get_writing') }}" method="post" enctype="multipart/form-data">
+                <h2>Write a poem stanza:</h2>
+                <textarea class="txt-box" type="text" name="response"></textarea>
                 <br>
-                <button type="submit">Upload file</button>
+                <button type="submit">Finish stanza</button>
             </form>
-            <br>
-            <hr>
-            <form action="{{ url_for('submit_query') }}" method="post" enctype="multipart/form-data">
-                <h2>Query</h2>
-                <input type="text" name="query" placeholder="Type your question here">
-                </input>
-                <button type="submit">Get answer</button>
+            <form action="{{ url_for('restart') }}" method="post">
+                <button name="button" type="submit">Restart</button>
             </form>
-            <hr>
-            <h2>Documents Uploaded</h2>
-            {% for doc in documents_uploaded %}
-            {{doc}}
-            <br>
-            {% endfor %}
         </div>
         <div class="column">
+            <h2>Your poem</h2>
             <div class="results">
                 {% if results %}
-
                 <body>
-                    <h3 class="result-header">Results for: {{query}}</h3>
                     {% for result in results %}
                     <div class="result">
-                        <h4>{{ result.passage_header }}</h4>
-                        <p>{{ result.passage_start }}<span class="highlight">{{ result.passage_highlight }}</span>{{ result.passage_end }}</p>
-                        <hr class="result-hr">
+                        <h4>{{ result }}</h4>
                     </div>
                     {% endfor %}
                 </body>
