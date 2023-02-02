@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Poetry Pair Writer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css">
+    <style>
+        .main-head {
+            height: 150px;
+            background: #FFF;
+        }
+
+        .sidenav {
+            height: 100%;
+            background-color: #000;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        button {
+            background-color: #000;
+            color: #fff;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+
+        .logo {
+            float: left;
+            color: white;
+            font-size: 24px;
+            margin: 5px 20px;
+            align-self: center;
+        }
+
+        .content {
+            padding: 25px;
+        }
+
+        .column {
+            float: left;
+            width: 50%;
+        }
+
+        .results {
+            background-color: beige;
+            height: 100%;
+            padding: 20px 0px;
+        }
+
+        .result-header {
+            padding: 5px 0px;
+        }
+
+        .result {
+            padding: 5px 0px;
+        }
+
+        .result-hr {
+            color: #000;
+        }
+
+        .message {
+            background-color: aliceblue;
+        }
+
+        .highlight {
+            background-color: #cefad0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidenav">
+        <div class="top-nav">
+            <a href="{{ url_for('index')}}">
+                <h2 class="logo">Hebbia 1.0</h2>
+            </a>
+        </div>
+    </div>
+    <div class="content">
+        {% if message %}
+        <p class="message">{{message}}</p>
+        {% endif %}
+        <div class="questions column">
+            <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+                <h2>Upload Documents</h2>
+                <p>Upload any text or pdf file you would like to search through</p>
+                <input type="file" name="file">
+                <br>
+                <button type="submit">Upload file</button>
+            </form>
+            <br>
+            <hr>
+            <form action="{{ url_for('submit_query') }}" method="post" enctype="multipart/form-data">
+                <h2>Query</h2>
+                <input type="text" name="query" placeholder="Type your question here">
+                </input>
+                <button type="submit">Get answer</button>
+            </form>
+            <hr>
+            <h2>Documents Uploaded</h2>
+            {% for doc in documents_uploaded %}
+            {{doc}}
+            <br>
+            {% endfor %}
+        </div>
+        <div class="column">
+            <div class="results">
+                {% if results %}
+
+                <body>
+                    <h3 class="result-header">Results for: {{query}}</h3>
+                    {% for result in results %}
+                    <div class="result">
+                        <h4>{{ result.passage_header }}</h4>
+                        <p>{{ result.passage_start }}<span class="highlight">{{ result.passage_highlight }}</span>{{ result.passage_end }}</p>
+                        <hr class="result-hr">
+                    </div>
+                    {% endfor %}
+                </body>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
